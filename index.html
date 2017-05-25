@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head><title>App</title></head>
+
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+		var socket = io();
+
+		socket.on('serverMessage', function(data){
+				$('#messages').text(JSON.stringify(data.message));
+		});
+
+		function sendMessage(){
+				var clientName = $('#txtClientName').val();
+				var isMaster = $('#chkIsMaster').is(':checked');
+				var message = $('#txtMessage').val();
+
+				socket.emit('clientMessage', {
+						'clientName': clientName,
+						'isMaster': isMaster,
+						'message': message
+				});
+
+		}
+	</script>
+  <body>
+  <table class="table">
+  	<tr>
+  		<td>ClientName</td>
+  		<td><input type="text" id="txtClientName" /></td>
+  	</tr>
+  	<tr>
+  		<td>IsMaster</td>
+  		<td><input type="checkbox" id="chkIsMaster" /></td>
+  	</tr>
+  	<tr>
+  		<td>Message</td>
+  		<td><textarea id="txtMessage"></textarea></td>
+  	</tr>
+  	<tr> 
+  		<td colspan="2"><input type="button" class="btn btn-primary" id="btnSendMessage" onclick="sendMessage()" value="Send" /></td>
+  	</tr> 
+  </table>
+				<div id="messages"></div>	
+  </body>
+</html>
