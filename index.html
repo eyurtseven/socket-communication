@@ -27,7 +27,7 @@
     //         })
     // });
 
-    var socket = io('http://localhost:3000');
+    var socket = io();
 
     socket.emit('authenticate', {
         'secret_key': '8f4748711cb801ffe0e6cf76ff2d4f3d'
