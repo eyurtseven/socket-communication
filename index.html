@@ -12,21 +12,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    // var socket = io.connect('http://localhost:3000');
-    // socket.on('connect', function() {
-    //     socket
-    //         .emit('authenticate', {
-    //             token: 'jwt'
-    //         }) //send the jwt
-    //         .on('authenticated', function() {
-    //             console.log("auth ok...");
-    //         })
-    //         .on('unauthorized', function(msg) {
-    //             console.log("unauthorized: " + JSON.stringify(msg.data));
-    //             throw new Error(msg.data.type);
-    //         })
-    // });
-
     var socket = io();
 
     socket.emit('authenticate', {
@@ -45,6 +30,15 @@
         $('#messages').text(JSON.stringify(data.message));
     });
 
+    socket.on('joinChannel', function(data) {
+        $('#messages').text(data);
+    });
+
+    function joinChannel() {
+        var channel = $('#txtChannel').val();
+        socket.emit('joinChannel', channel);
+    }
+
     function sendMessage() {
         var clientName = $('#txtClientName').val();
         var isMaster = $('#chkIsMaster').is(':checked');
@@ -60,6 +54,13 @@
 
 <body>
     <table class="table">
+        <tr>
+            <td>Channel</td>
+            <td><input type="text" id="txtChannel" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="button" id="btnJoinChannel" value="Join" onclick="joinChannel()" /></td>
+        </tr>
         <tr>
             <td>ClientName</td>
             <td><input type="text" id="txtClientName" /></td>

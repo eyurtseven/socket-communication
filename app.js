@@ -16,6 +16,8 @@ io.on('connection', function(socket) {
 
     socket.on('authenticate', function(data) {
         var secret_key = data.secret_key;
+        var channel = data.channel;
+
         if (secret_key == "8f4748711cb801ffe0e6cf76ff2d4f3d") {
             socket.auth = true;
             socket.emit('authenticate', true);
@@ -27,10 +29,17 @@ io.on('connection', function(socket) {
         }
     });
 
+    socket.on('joinChannel', function(channel) {
+        socket.join(channel);
+        socket.emit('joinChannel', 'Connected to ' + channel);
+        console.log(channel);
+    });
+
     socket.on('clientMessage', function(data) {
-        //socket.emit('serverMessage', { message: data });
+        var channel = Object.keys(socket.rooms).filter(item => item != socket.id);
+        console.log(channel);
         if (socket.auth) {
-            socket.broadcast.emit('serverMessage', { message: data });
+            socket.in(channel).broadcast.emit('serverMessage', { message: data });
         }
     });
 
